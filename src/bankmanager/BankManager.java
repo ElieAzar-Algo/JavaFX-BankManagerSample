@@ -4,21 +4,27 @@
  */
 package bankmanager;
 
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import jdbc.ConnectDatabase;
+import jdbc.GetData;
 
 
 
@@ -31,18 +37,11 @@ public class BankManager extends Application {
     @Override
     public void start(Stage primaryStage) throws SQLException, ClassNotFoundException {
         Button btn = new Button();
-        Button btn_2 = new Button();
-FlowPane root = new FlowPane();
+        Button btn_2 = new Button("btn 222");
+        StackPane root = new StackPane();
+        root.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.LIGHTSTEELBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
-         btn.setText("Say 'Hello World'");
-        btn_2.setText("button 2'");  
-         TextField tf = new TextField();
-         ConnectDatabase cd = new ConnectDatabase();
-         cd.SelectRecord("SELECT * FROM accounts, clients WHERE client_id = clients.id ",btn);
-        
-           
-
-          btn_2.setOnAction(new EventHandler<ActionEvent>() {
+  btn_2.setOnAction(new EventHandler<ActionEvent>() {
            
             @Override
             public void handle(ActionEvent event) {
@@ -50,7 +49,7 @@ FlowPane root = new FlowPane();
             try{
               
                 ListUsers cu = new ListUsers();
-                root.getChildren().removeAll(btn, tf, btn_2);
+                root.getChildren().removeAll(btn, btn_2);
                 root.getChildren().add(cu.getRootPane());
                // primaryStage.getScene().setRoot(cu.getRootPane()); 
                 System.out.println("switchhhhh");
@@ -61,27 +60,20 @@ FlowPane root = new FlowPane();
         });
 
 
-
-         btn.setOnAction(new EventHandler<ActionEvent>() {
-           
+        btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
-                
-            try{
-             cd.InsertRecord("INSERT INTO accounts (amount, currency, type, created_at, client_id, employee_id) VALUES ('1000','USD','')");
-            }catch(SQLException ex){
-                }catch (ClassNotFoundException ex) {
-                 Logger.getLogger(BankManager.class.getName()).log(Level.SEVERE, null, ex);
+            public void handle(ActionEvent event){
+                try{
+                GetData _gd = new GetData("SELECT * FROM clients;");
+                }catch(Exception ex){
+
                 }
+                
             }
         });
-
+        root.getChildren().addAll(btn, btn_2);
         
-
-        
-        root.getChildren().addAll(btn, tf, btn_2);
-        
-        Scene scene = new Scene(root, 700, 500);
+        Scene scene = new Scene(root, 1000, 500);
         
         primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);
