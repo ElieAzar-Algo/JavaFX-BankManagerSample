@@ -17,8 +17,10 @@ import javafx.scene.control.Button;
  * @author elie
  */
 public class GetData {
-private Connection connect;
-   private  ResultSet res;
+
+    private Connection connect;
+    private  ResultSet res;
+
     public GetData(String insertQuery) throws ClassNotFoundException, SQLException {
 
         System.out.println(insertQuery);
@@ -29,23 +31,7 @@ private Connection connect;
         Statement statement = connect.createStatement();
         System.out.println("connection 2");
 
-       res = statement.executeQuery(insertQuery);
-//        ResultSetMetaData rsmd = res.getMetaData();
-//
-//        System.out.println("connection 3");
-//        int columnsNumber = rsmd.getColumnCount();
-//        System.out.println("connection 5");
-//
-//        while (res.next()) {
-//        System.out.println("connection 6");
-//        for (int i = 1; i <= columnsNumber; i++) {
-//        if (i > 1) System.out.print(",  ");
-//        String columnValue = res.getString(i);
-//        System.out.print(columnValue + " " + rsmd.getColumnName(i));
-//
-//        }
-//             System.out.println( "Bovvv!!");
-//        }
+        res = statement.executeQuery(insertQuery);
     }
 
     public  ResultSet getResultSet(){

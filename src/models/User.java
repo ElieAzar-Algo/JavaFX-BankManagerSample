@@ -14,13 +14,13 @@ public class User {
     private String dateOfBirth = null;
     private String gendre = null;
     private String startAt = null;
-    private String amount = null;   
+   
     private String currency = null;
     private String type = null;
     private String employee = null;
 
 
-    public User(String id, String name, String address, String phone, String date, String start, String email,String gendre, String amount, String cur, String type, String emp) {
+    public User(String id, String name, String address, String phone, String date, String start, String email,String gendre, String cur, String type, String emp) {
         this.id = id;       
         this.name = name;
         this.address = address;
@@ -29,12 +29,12 @@ public class User {
         this.dateOfBirth = date;
         this.gendre = gendre;
         this.startAt = start;
-        this.amount = amount;
+        
         this.currency = cur;
         this.type = type;
         this.employee = emp;
     }
-public String getGendre() {
+    public String getGendre() {
         return gendre;
     }
     public void setGendre(String gendre) {
@@ -88,13 +88,6 @@ public String getGendre() {
     }
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-    public void setAmount(String amount) {
-        this.amount = amount;
     }
 
     public String getCurrency() {
