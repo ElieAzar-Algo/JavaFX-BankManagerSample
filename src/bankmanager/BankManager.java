@@ -37,7 +37,7 @@ public class BankManager extends Application {
     private Stage ps;
     private int width = 400;
     private int height = 500;
-    public ListUsers lu;
+    public ListClients lu;
     private StackPane root = new StackPane();
     private Button btn_2 = new Button("Start");
 
@@ -97,7 +97,7 @@ public class BankManager extends Application {
         
         Scene scene = new Scene(root, width, height);
         
-        ps.setTitle("Hello World!");
+        ps.setTitle("AUL Bank Management");
         ps.setScene(scene);
         ps.show();
     }

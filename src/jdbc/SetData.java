@@ -5,36 +5,33 @@
 package jdbc;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javafx.scene.control.Button;
 
 /**
  *
  * @author elie
  */
-public class GetData {
+public class SetData {
+ private Connection connect;
+    private  int res;
 
-    private Connection connect;
-    private  ResultSet res;
-
-    public GetData(String insertQuery) throws ClassNotFoundException, SQLException {
+    public SetData(String insertQuery) throws ClassNotFoundException, SQLException {
 
         System.out.println(insertQuery);
         ConnectDatabase conx =new ConnectDatabase();
         connect = conx.getConnection();
 
-        System.out.println("connection get 1");
+        System.out.println("connection set 1");
         Statement statement = connect.createStatement();
-        System.out.println("connection get 2");
+        System.out.println("connection set 2");
 
-        res = statement.executeQuery(insertQuery);
+        res = statement.executeUpdate(insertQuery);
+    
     }
 
-    public  ResultSet getResultSet(){
+    public  int getInsertResponse(){
     return res;
     }
 }

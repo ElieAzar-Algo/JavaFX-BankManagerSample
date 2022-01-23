@@ -34,7 +34,7 @@ public class Login{
 private  VBox vb = new VBox();
 private ResultSet result;
 private Stage ps;
- public ListUsers lu;
+ public ListClients lu;
 
 public Login() throws ClassNotFoundException, SQLException{
   
@@ -66,7 +66,7 @@ public Login() throws ClassNotFoundException, SQLException{
                 result = _gd.getResultSet();
 
                 if (result.next()){
-                  System.out.println("connection login 1");
+                    System.out.println("connection login 1");
                     SwitchToListUsers(event, result.getString("full_name"));
                   while(result.next()){ 
                     // EmpLogin lgn = new EmpLogin(result.getString("email"), result.getString("password"));
@@ -93,12 +93,19 @@ public Login() throws ClassNotFoundException, SQLException{
 
     public void SwitchToListUsers(ActionEvent event, String emp) throws ClassNotFoundException, SQLException{
             System.out.println("switch to listUsers");
-            this.lu = new ListUsers(emp);
+            this.lu = new ListClients(emp);
             ps = (Stage)((Node)event.getSource()).getScene().getWindow();
             Scene scene_listing = new Scene(lu.getRootPane());
+            ps.setTitle("MY CLIENTS");
             ps.setScene(scene_listing);
+            resizeScene(1000,500);
             System.out.println("Done");
         }
+
+    public void resizeScene(int w, int h) {
+           this.ps.setWidth(w);
+           this.ps.setHeight(h);
+       }
     
 }
 

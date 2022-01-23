@@ -4,7 +4,7 @@
  */
 package models;
 
-public class User {
+public class Client {
 
     private String id = null;
     private String name = null;
@@ -20,7 +20,7 @@ public class User {
     private String employee = null;
 
 
-    public User(String id, String name, String address, String phone, String date, String start, String email,String gendre, String cur, String type, String emp) {
+    public Client(String id, String name, String address, String phone, String date, String start, String email,String gendre, String cur, String type, String emp) {
         this.id = id;       
         this.name = name;
         this.address = address;
