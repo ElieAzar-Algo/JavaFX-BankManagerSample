@@ -18,9 +18,11 @@ public class Client {
     private String currency = null;
     private String type = null;
     private String employee = null;
+ private int account;
+    private Double amount = null;
 
 
-    public Client(String id, String name, String address, String phone, String date, String start, String email,String gendre, String cur, String type, String emp) {
+    public Client(String id, String name, String address, String phone, String date, String start, String email,String gendre, String cur, String type, String emp, int account, Double amount) {
         this.id = id;       
         this.name = name;
         this.address = address;
@@ -33,6 +35,8 @@ public class Client {
         this.currency = cur;
         this.type = type;
         this.employee = emp;
+        this.account = account;
+        this.amount = amount;
     }
     public String getGendre() {
         return gendre;
@@ -114,5 +118,20 @@ public class Client {
         this.employee = employee;
     }
     
+    public Double getAmount() {
+        return amount;
+    }
+
+   public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public int getAccount() {
+        return account;
+    }
+
+    public void setAccount(int account) {
+        this.account = account;
+    }
     
 }

@@ -98,15 +98,10 @@ public Login() throws ClassNotFoundException, SQLException{
             Scene scene_listing = new Scene(lu.getRootPane());
             ps.setTitle("MY CLIENTS");
             ps.setScene(scene_listing);
-            resizeScene(1000,500);
+            ps.setFullScreen(true);
             System.out.println("Done");
         }
 
-    public void resizeScene(int w, int h) {
-           this.ps.setWidth(w);
-           this.ps.setHeight(h);
-       }
-    
 }
 
 

@@ -5,10 +5,14 @@
 package bankmanager;
 
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -19,6 +23,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import jdbc.SetData;
 
 
@@ -31,9 +36,12 @@ public class AddNewClient {
 private int result = 0;
 private int result_2;
 private  VBox vb = new VBox();
+private Stage ps;
+ public ListClients lu;
+private String emp_name;
 
- public AddNewClient(int empId)throws ClassNotFoundException, SQLException{
-
+ public AddNewClient(int empId, String emp)throws ClassNotFoundException, SQLException{
+emp_name = emp;
     Button save_btn = new Button("Save");
     TextField fn = new TextField();
     TextField adrs = new TextField();
@@ -46,6 +54,7 @@ private  VBox vb = new VBox();
 
     TextField _currency = new TextField();
     TextField _type = new TextField();
+    Button back_btn = new Button("Back");
     TextField _inputs[] = new TextField[]{fn,adrs,_phone,s_at,_email, _gendre, _picture, _currency, _type};
   
     Text warning = new Text("");
@@ -72,6 +81,7 @@ private  VBox vb = new VBox();
              new Label("Type"),
             _type,
             save_btn,
+            back_btn,
             warning );
 
 
@@ -80,18 +90,19 @@ private  VBox vb = new VBox();
                 @Override
                 public void handle(ActionEvent event) {
 
-          System.out.println("connection add client 0");
-
+                System.out.println("connection add client 0");
                try{
                      System.out.println("connection add client 1");
+
                      SetData _sd = new SetData("INSERT INTO clients (full_name, address,phone_number, date_of_birth, started_at, email, gendre, picture)\n" +
                      "VALUES ('"+ fn.getText().trim()+ "','"+ adrs.getText().trim()+ "','"+ _phone.getText().trim()+ "','"+ dob.getValue()+"',CURRENT_DATE, '"+ _email.getText().trim()+ "','"+ _gendre.getText().trim()+ "','"+ _picture.getText().trim()+ "');\n");
                      System.out.println("connection add client 2");
+
                      result = _sd.getInsertResponse();
-                     System.out.println(result);
+                     
                      SetData _sd2 = new SetData("INSERT INTO accounts (currency, type, created_at, client_id, employee_id) VALUES('"+ _currency.getText().trim()+ "','"+ _type.getText().trim()+ "',CURRENT_DATE, (SELECT id FROM clients WHERE email='"+ _email.getText().trim()+ "'),"+empId+");");
                      result_2 = _sd2.getInsertResponse();
-                      System.out.println(result_2);
+                      
                     if (result == 0){
                         warning.setText("Operation Failed");
                         warning.setFill(Color.RED);
@@ -102,7 +113,7 @@ private  VBox vb = new VBox();
                             for (int i = 0 ; i<_inputs.length; i++){
                                 _inputs[i].clear();
                             }
-                            dob.setValue(null);
+                           dob.setValue(null);
                     }
 
                  }catch(Exception ex){
@@ -114,6 +125,17 @@ private  VBox vb = new VBox();
           System.out.println("connection add client -1"); 
          }
     });
+    back_btn.setOnAction(new EventHandler<ActionEvent>() { 
+                       @Override
+                       public void handle(ActionEvent event) {
+
+                       try{
+                           SwitchToListUsers(event,emp_name);
+                       } catch (Exception ex) {
+                               Logger.getLogger(BankManager.class.getName()).log(Level.SEVERE, null, ex);
+                           }
+                       }
+                   });
     
     
     }
@@ -122,4 +144,14 @@ public Pane getRootPane(){
        sp.getChildren().add(vb);
        return sp;
    }
+ public void SwitchToListUsers(ActionEvent event, String emp) throws ClassNotFoundException, SQLException{
+            System.out.println("switch to listUsers");
+            this.lu = new ListClients(emp);
+            ps = (Stage)((Node)event.getSource()).getScene().getWindow();
+            Scene scene_listing = new Scene(lu.getRootPane());
+            ps.setTitle("MY CLIENTS");
+            ps.setScene(scene_listing);
+             ps.setFullScreen(true);
+            System.out.println("Done");
+        }
 }

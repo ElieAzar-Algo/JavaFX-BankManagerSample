@@ -8,6 +8,7 @@ import java.sql.ResultSetMetaData;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
@@ -20,13 +21,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  *
@@ -38,12 +42,19 @@ public class ListClients {
   private TableView table = new TableView();
   private ResultSet result;
   public AddNewClient anc;
+  public AddTransaction atra;
   private Stage ps;
+  private int account_id;
+  private String emp_name;
 
    public ListClients(String emp)throws ClassNotFoundException, SQLException{
+emp_name = emp;
     try{
         System.out.println("connection 0");
-        GetData _gd = new GetData("SELECT clients.id, clients.full_name, address, phone_number, date_of_birth, started_at, clients.email, gendre, currency,type, employees.full_name FROM clients, accounts, employees WHERE clients.id = client_id and employees.id = employee_id;");
+        GetData _gd = new GetData("SELECT clients.id, clients.full_name, address, phone_number, date_of_birth, started_at, clients.email, gendre, currency,type, employees.full_name, accounts.id as account, sum(actions.amount) as amount \n" +
+"FROM clients, accounts, employees, actions \n" +
+"WHERE clients.id = client_id and employees.id = employee_id and accounts.id = actions.account_id\n" +
+"GROUP BY clients.id;");
         result = _gd.getResultSet();
     }catch(Exception ex){
 
@@ -87,7 +98,13 @@ public class ListClients {
         TableColumn<Client, String> employeeCol = new TableColumn<>("Employee");
         employeeCol.setCellValueFactory(new PropertyValueFactory<>("employee"));
 
-        table.getColumns().addAll(idCol,nameCol, addressCol, phoneCol, dateOfBirthCol,startAtCol, emailCol, gendreCol, currencyCol, typeCol, employeeCol);
+        TableColumn<Client, Double> amountCol = new TableColumn<>("Amount");
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
+
+        table.getColumns().addAll(idCol,nameCol, addressCol, phoneCol, dateOfBirthCol,startAtCol, emailCol, gendreCol, currencyCol, typeCol, employeeCol, amountCol);
+        addButtonToTable();
+        addButtonToTable_1();
+        addButtonToTable_2();
 
         ResultSetMetaData rsmd = result.getMetaData();
         System.out.println("connection 4");
@@ -103,9 +120,9 @@ public class ListClients {
         String columnValue = result.getString(i);
         System.out.print(columnValue + " " + rsmd.getColumnName(i));
         }
-        table.getItems().add(new Client(result.getString(1), result.getString(2),result.getString(3),
-        result.getString(4),result.getString(5), result.getString(6),result.getString(7),result.getString(8),
-        result.getString(9),result.getString(10),result.getString(11)));
+        table.getItems().addAll(new Client(result.getString("id"), result.getString("full_name"),result.getString("address"),
+        result.getString("phone_number"),result.getString("date_of_birth"),result.getString("started_at"), result.getString("email"),result.getString("gendre"),result.getString("currency"),
+        result.getString("type"),result.getString(11),result.getInt("account"),result.getDouble("amount")));
 
              System.out.println( "Bovvv!!");
         }
@@ -134,7 +151,7 @@ public class ListClients {
 
  public void SwitchToAddClient(ActionEvent event, int emp) throws ClassNotFoundException, SQLException{
             System.out.println("switch to SwitchToAddClient");
-            this.anc = new AddNewClient(emp);
+            this.anc = new AddNewClient(emp, emp_name);
             ps = (Stage)((Node)event.getSource()).getScene().getWindow();
             Scene scene_listing = new Scene(anc.getRootPane());
             ps.setTitle("ADD NEW CLIENT");
@@ -143,9 +160,125 @@ public class ListClients {
             System.out.println("Done");
         }
 
+public void SwitchToAddTransaction(ActionEvent event, int accountId, String emp) throws ClassNotFoundException, SQLException{
+            System.out.println("switch to SwitchToAddClient");
+            this.atra = new AddTransaction(accountId, emp);
+            ps = (Stage)((Node)event.getSource()).getScene().getWindow();
+            Scene scene_listing = new Scene(atra.getRootPane());
+            ps.setTitle("ADD NEW TRANSACTION");
+            ps.setScene(scene_listing);
+            resizeScene(300,300);
+            System.out.println("Done");
+        }
+
 public void resizeScene(int w, int h) {
            this.ps.setWidth(w);
            this.ps.setHeight(h);
        }
-    
+
+ private void addButtonToTable() {
+        TableColumn<Client, Void> colBtn = new TableColumn("");
+        Callback<TableColumn<Client, Void>, TableCell<Client, Void>> cellFactory = new Callback<TableColumn<Client, Void>, TableCell<Client, Void>>() {
+            @Override
+            public TableCell<Client, Void> call(final TableColumn<Client, Void> param) {
+                final TableCell<Client, Void> cell = new TableCell<Client, Void>() {
+                    private final   Button view_btn = new Button("View");
+                    {
+                        view_btn.setStyle("-fx-background-color:#90EE90;");
+                        view_btn.setOnAction((ActionEvent event) -> {
+                            Client data = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData: " + data);
+                        });
+                    }
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(view_btn);
+                        }
+                    }
+                };
+
+                return cell;
+
+            }
+        };
+        colBtn.setCellFactory(cellFactory);
+        table.getColumns().add(colBtn);
+    }
+
+    private void addButtonToTable_1() {
+            TableColumn<Client, Void> colBtn_1 = new TableColumn("");
+
+            Callback<TableColumn<Client, Void>, TableCell<Client, Void>> cellFactory = new Callback<TableColumn<Client, Void>, TableCell<Client, Void>>() {
+                @Override
+                public TableCell<Client, Void> call(final TableColumn<Client, Void> param) {
+                    final TableCell<Client, Void> cell = new TableCell<Client, Void>() {
+
+                        private final Button transaction_btn = new Button("Transaction");
+                        {
+                            transaction_btn.setStyle("-fx-background-color:#2CA6EF;");
+                            transaction_btn.setOnAction((ActionEvent event) -> {
+                                try{
+                                    
+                                    Client clt = getTableView().getItems().get(getIndex());  //get(getIndex());
+                                    System.out.println("rowwwwww!!!! "+clt.getAccount()+"-"+clt.getEmployee());
+                                    SwitchToAddTransaction(event, clt.getAccount(), emp_name);
+                                    
+
+                                }catch(Exception ex){             
+                                    System.out.println(ex);
+                                }
+                                
+                            });
+                        }
+                        @Override
+                        public void updateItem(Void item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                            } else {
+                                setGraphic(transaction_btn);
+                            }
+                        }
+                    };
+                    return cell;
+                }
+            };
+            colBtn_1.setCellFactory(cellFactory);
+            table.getColumns().add(colBtn_1);
+        }
+
+    private void addButtonToTable_2() {
+            TableColumn<Client, Void> colBtn_2 = new TableColumn("");
+            Callback<TableColumn<Client, Void>, TableCell<Client, Void>> cellFactory = new Callback<TableColumn<Client, Void>, TableCell<Client, Void>>() {
+                @Override
+                public TableCell<Client, Void> call(final TableColumn<Client, Void> param) {
+                    final TableCell<Client, Void> cell = new TableCell<Client, Void>() {
+                        private final  Button del_btn = new Button("Delete");  
+                        {
+                            del_btn.setStyle("-fx-background-color:#E44F2F;");
+                            del_btn.setOnAction((ActionEvent event) -> {
+                                Client data = getTableView().getItems().get(getIndex());
+                                System.out.println("selectedData: " + data);
+                            });
+                        }
+                        @Override
+                        public void updateItem(Void item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                            } else {
+                                setGraphic(del_btn);
+                            }
+                        }
+                    };
+                    return cell;
+                }
+            };
+            colBtn_2.setCellFactory(cellFactory);
+            table.getColumns().add(colBtn_2);
+        } 
 }
