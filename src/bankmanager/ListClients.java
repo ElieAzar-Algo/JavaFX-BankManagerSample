@@ -29,8 +29,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import jdbc.SetData;
 
 /**
  *
@@ -46,19 +49,22 @@ public class ListClients {
   private Stage ps;
   private int account_id;
   private String emp_name;
+  private int deleteResult = 0;
+  private Text warning = new Text("");
 
-   public ListClients(String emp)throws ClassNotFoundException, SQLException{
-emp_name = emp;
-    try{
-        System.out.println("connection 0");
-        GetData _gd = new GetData("SELECT clients.id, clients.full_name, address, phone_number, date_of_birth, started_at, clients.email, gendre, currency,type, employees.full_name, accounts.id as account, sum(actions.amount) as amount \n" +
-"FROM clients, accounts, employees, actions \n" +
-"WHERE clients.id = client_id and employees.id = employee_id and accounts.id = actions.account_id\n" +
-"GROUP BY clients.id;");
-        result = _gd.getResultSet();
-    }catch(Exception ex){
-
-    }
+    public ListClients(String emp)throws ClassNotFoundException, SQLException{
+        emp_name = emp;
+        try{
+            System.out.println("connection 0");
+            GetData _gd = new GetData("SELECT clients.id, clients.full_name, address, phone_number, date_of_birth, started_at, clients.email, gendre, currency,type, employees.full_name, accounts.id as account, sum(actions.amount) as amount \n" +
+            "FROM clients, accounts, employees, actions \n" +
+            "WHERE clients.id = client_id and employees.id = employee_id and accounts.id = actions.account_id\n" +
+            "GROUP BY clients.id;");
+            result = _gd.getResultSet();
+        }catch(Exception ex){
+            warning.setText("There is an ERROR with getting the data");
+            warning.setFill(Color.RED);
+        }
         Label lb = new Label("Logged in by "+ emp);
         Button add_btn = new Button("Add Client");
        
@@ -141,15 +147,16 @@ emp_name = emp;
 
         vb.setSpacing(5);
         vb.setPadding(new Insets(7, 0, 0, 7));
-        vb.getChildren().addAll(lb,add_btn, table);
+        vb.getChildren().addAll(lb,add_btn,warning, table);
     }
-   public Pane getRootPane(){
+
+    public Pane getRootPane(){
        StackPane sp = new StackPane();
        sp.getChildren().add(vb);
        return sp;
-   }
+    }
 
- public void SwitchToAddClient(ActionEvent event, int emp) throws ClassNotFoundException, SQLException{
+    public void SwitchToAddClient(ActionEvent event, int emp) throws ClassNotFoundException, SQLException{
             System.out.println("switch to SwitchToAddClient");
             this.anc = new AddNewClient(emp, emp_name);
             ps = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -158,9 +165,9 @@ emp_name = emp;
             ps.setScene(scene_listing);
             resizeScene(400,650);
             System.out.println("Done");
-        }
+    }
 
-public void SwitchToAddTransaction(ActionEvent event, int accountId, String emp) throws ClassNotFoundException, SQLException{
+    public void SwitchToAddTransaction(ActionEvent event, int accountId, String emp) throws ClassNotFoundException, SQLException{
             System.out.println("switch to SwitchToAddClient");
             this.atra = new AddTransaction(accountId, emp);
             ps = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -169,14 +176,14 @@ public void SwitchToAddTransaction(ActionEvent event, int accountId, String emp)
             ps.setScene(scene_listing);
             resizeScene(300,300);
             System.out.println("Done");
-        }
+    }
 
-public void resizeScene(int w, int h) {
+    public void resizeScene(int w, int h) {
            this.ps.setWidth(w);
            this.ps.setHeight(h);
-       }
+    }
 
- private void addButtonToTable() {
+    private void addButtonToTable() {
         TableColumn<Client, Void> colBtn = new TableColumn("");
         Callback<TableColumn<Client, Void>, TableCell<Client, Void>> cellFactory = new Callback<TableColumn<Client, Void>, TableCell<Client, Void>>() {
             @Override
@@ -249,7 +256,7 @@ public void resizeScene(int w, int h) {
             };
             colBtn_1.setCellFactory(cellFactory);
             table.getColumns().add(colBtn_1);
-        }
+    }
 
     private void addButtonToTable_2() {
             TableColumn<Client, Void> colBtn_2 = new TableColumn("");
@@ -261,8 +268,33 @@ public void resizeScene(int w, int h) {
                         {
                             del_btn.setStyle("-fx-background-color:#E44F2F;");
                             del_btn.setOnAction((ActionEvent event) -> {
-                                Client data = getTableView().getItems().get(getIndex());
-                                System.out.println("selectedData: " + data);
+                            Client clt = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedClient: " + clt.getId());
+                             
+                                try {
+                                    SetData _sd = new SetData("Delete from clients where id = "+clt.getId()+";");
+                                    deleteResult = _sd.getInsertResponse();
+                                } catch (ClassNotFoundException ex) {
+                                    warning.setText("Error Occured when deleting client with id: "+clt.getId()+" ERROR: "+ex);
+                                    warning.setFill(Color.RED);
+                                    Logger.getLogger(ListClients.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (SQLException ex) {
+                                    warning.setText("Error Occured when deleting client with id: "+clt.getId()+" DATABASE ERROR: "+ex);
+                                    warning.setFill(Color.RED);
+                                    Logger.getLogger(ListClients.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            System.out.println("connection delete client Done!");
+
+                            if (deleteResult == 0){
+                                warning.setText("Operation Failed");
+                                warning.setFill(Color.RED);
+                            }else{
+                                warning.setText("Client Profile deleted successfully!");
+                                warning.setFill(Color.GREEN);
+                                getTableView().getItems().remove(getIndex());
+
+                            }
+
                             });
                         }
                         @Override
@@ -280,5 +312,5 @@ public void resizeScene(int w, int h) {
             };
             colBtn_2.setCellFactory(cellFactory);
             table.getColumns().add(colBtn_2);
-        } 
+    } 
 }

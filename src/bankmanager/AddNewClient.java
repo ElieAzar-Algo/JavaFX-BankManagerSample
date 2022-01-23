@@ -14,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 
@@ -52,10 +53,25 @@ emp_name = emp;
     TextField _gendre = new TextField();
     TextField _picture = new TextField();
 
-    TextField _currency = new TextField();
-    TextField _type = new TextField();
+    ComboBox _currency = new ComboBox();
+    _currency.getItems().addAll(
+    "USD",
+    "EUR",
+    "GBP",
+    "CHF",
+    "JPY",
+    "LBP"
+    );
+
+    ComboBox _type = new ComboBox();
+    _type.getItems().addAll(
+    "Debit",
+    "Credit"
+    );
+
+    TextField _amount = new TextField();
     Button back_btn = new Button("Back");
-    TextField _inputs[] = new TextField[]{fn,adrs,_phone,s_at,_email, _gendre, _picture, _currency, _type};
+    TextField _inputs[] = new TextField[]{fn, adrs, _phone, s_at, _email, _gendre, _picture, _amount};
   
     Text warning = new Text("");
       
@@ -76,6 +92,8 @@ emp_name = emp;
             _gendre,
             new Label("Picture"),
             _picture,
+            new Label("First Deposited Amount"),
+            _amount,   
             new Label("Currency"),
             _currency,
              new Label("Type"),
@@ -100,10 +118,13 @@ emp_name = emp;
 
                      result = _sd.getInsertResponse();
                      
-                     SetData _sd2 = new SetData("INSERT INTO accounts (currency, type, created_at, client_id, employee_id) VALUES('"+ _currency.getText().trim()+ "','"+ _type.getText().trim()+ "',CURRENT_DATE, (SELECT id FROM clients WHERE email='"+ _email.getText().trim()+ "'),"+empId+");");
-                     result_2 = _sd2.getInsertResponse();
-                      
-                    if (result == 0){
+                     SetData _sd2 = new SetData("INSERT INTO accounts (currency, type, created_at, client_id, employee_id) VALUES('"+ _currency.getValue().toString().trim()+ "','"+ _type.getValue().toString().trim()+ "',CURRENT_DATE, (SELECT id FROM clients WHERE email='"+ _email.getText().trim()+ "'),"+empId+");");
+                     result = _sd2.getInsertResponse();
+
+                     String text = _amount.getText();
+                     SetData _sd3 = new SetData("INSERT INTO actions (account_id, amount, created_at, action) VALUES((SELECT MAX(id) FROM accounts),"+ Double.parseDouble(text)+ ",NOW(),'Deposit');");
+                     result = _sd2.getInsertResponse();
+                    if (result == 0 ){
                         warning.setText("Operation Failed");
                         warning.setFill(Color.RED);
                     }else{

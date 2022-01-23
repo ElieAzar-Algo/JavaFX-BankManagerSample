@@ -45,10 +45,7 @@ public class BankManager extends Application {
     public void start(Stage primaryStage) throws SQLException, ClassNotFoundException {
      ps = primaryStage;
 
-        Button btn = new Button();
-        
-
-        
+        Button btn = new Button();        
         root.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.LIGHTSTEELBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
 //            btn_2.setOnAction(new EventHandler<ActionEvent>() { 
