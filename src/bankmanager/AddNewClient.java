@@ -40,9 +40,11 @@ private  VBox vb = new VBox();
 private Stage ps;
  public ListClients lu;
 private String emp_name;
+private String emp_role;
 
- public AddNewClient(int empId, String emp)throws ClassNotFoundException, SQLException{
+ public AddNewClient(int empId, String emp, String role)throws ClassNotFoundException, SQLException{
 emp_name = emp;
+emp_role = role;
     Button save_btn = new Button("Save");
     TextField fn = new TextField();
     TextField adrs = new TextField();
@@ -167,7 +169,7 @@ public Pane getRootPane(){
    }
  public void SwitchToListUsers(ActionEvent event, String emp) throws ClassNotFoundException, SQLException{
             System.out.println("switch to listUsers");
-            this.lu = new ListClients(emp);
+            this.lu = new ListClients(emp, emp_role);
             ps = (Stage)((Node)event.getSource()).getScene().getWindow();
             Scene scene_listing = new Scene(lu.getRootPane());
             ps.setTitle("MY CLIENTS");

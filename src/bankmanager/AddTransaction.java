@@ -33,11 +33,13 @@ public class AddTransaction {
 private int result = 0;
 private int result_2;
 private  VBox vb = new VBox();
-public int _sign=1;
+private int _sign=1;
 private Stage ps;
- public ListClients lu;
-public AddTransaction(int accountId, String emp_name)throws ClassNotFoundException, SQLException{
+private ListClients lu;
+private String emp_role;
 
+public AddTransaction(int accountId, String emp_name, String role)throws ClassNotFoundException, SQLException{
+ emp_role = role;
     Button save_btn = new Button("Save");
     Button back_btn = new Button("Back");
     TextField _amount = new TextField();
@@ -127,21 +129,22 @@ _action.setOnAction(new EventHandler<ActionEvent>() {
          }
     });   
   }  
+
 public Pane getRootPane(){
        StackPane sp = new StackPane();
        sp.getChildren().add(vb);
        return sp;
    }
- public void SwitchToListUsers(ActionEvent event, String emp) throws ClassNotFoundException, SQLException{
-            System.out.println("switch to listUsers");
-            this.lu = new ListClients(emp);
-            ps = (Stage)((Node)event.getSource()).getScene().getWindow();
-            Scene scene_listing = new Scene(lu.getRootPane());
-            ps.setTitle("MY CLIENTS");
-            ps.setScene(scene_listing);
-             ps.setFullScreen(true);
-            System.out.println("Done");
-        }
- 
-    
+
+public void SwitchToListUsers(ActionEvent event, String emp) throws ClassNotFoundException, SQLException{
+           System.out.println("switch to listUsers");
+           this.lu = new ListClients(emp, emp_role);
+           ps = (Stage)((Node)event.getSource()).getScene().getWindow();
+           Scene scene_listing = new Scene(lu.getRootPane());
+           ps.setTitle("MY CLIENTS");
+           ps.setScene(scene_listing);
+            ps.setFullScreen(true);
+           System.out.println("Done");
+   }
+
 }

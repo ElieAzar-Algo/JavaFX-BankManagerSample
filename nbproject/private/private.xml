@@ -5,14 +5,13 @@
         <group>
             <file>file:/home/elie/NetBeansProjects/BankManager/src/bankmanager/AddNewClient.java</file>
             <file>file:/home/elie/NetBeansProjects/BankManager/src/bankmanager/ListClients.java</file>
-            <file>file:/home/elie/NetBeansProjects/BankManager/src/jdbc/GetData.java</file>
+            <file>file:/home/elie/NetBeansProjects/BankManager/src/models/AcoountTransaction.java</file>
+            <file>file:/home/elie/NetBeansProjects/BankManager/src/bankmanager/ViewReport.java</file>
             <file>file:/home/elie/NetBeansProjects/BankManager/src/bankmanager/BankManager.java</file>
             <file>file:/home/elie/NetBeansProjects/BankManager/src/models/Client.java</file>
-            <file>file:/home/elie/NetBeansProjects/BankManager/src/models/EmpLogin.java</file>
-            <file>file:/home/elie/NetBeansProjects/BankManager/src/models/Employee.java</file>
+            <file>file:/home/elie/NetBeansProjects/BankManager/src/bankmanager/AddTransaction.java</file>
             <file>file:/home/elie/NetBeansProjects/BankManager/src/bankmanager/Login.java</file>
             <file>file:/home/elie/NetBeansProjects/BankManager/src/bankmanager/CreateUser.java</file>
-            <file>file:/home/elie/NetBeansProjects/BankManager/src/jdbc/SetData.java</file>
         </group>
     </open-files>
 </project-private>

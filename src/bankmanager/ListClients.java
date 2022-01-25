@@ -27,6 +27,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PopupControl;
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -46,14 +47,19 @@ public class ListClients {
   private ResultSet result;
   public AddNewClient anc;
   public AddTransaction atra;
+  public ViewReport vr;
   private Stage ps;
   private int account_id;
   private String emp_name;
+  private String emp_role;
   private int deleteResult = 0;
   private Text warning = new Text("");
 
-    public ListClients(String emp)throws ClassNotFoundException, SQLException{
+    public ListClients(String emp, String role)throws ClassNotFoundException, SQLException{
+
         emp_name = emp;
+        emp_role = role;
+        System.out.println("employee role ! "+emp_role+" employee name "+emp_name);
         try{
             System.out.println("connection 0");
             GetData _gd = new GetData("SELECT clients.id, clients.full_name, address, phone_number, date_of_birth, started_at, clients.email, gendre, currency,type, employees.full_name, accounts.id as account, sum(actions.amount) as amount \n" +
@@ -158,7 +164,7 @@ public class ListClients {
 
     public void SwitchToAddClient(ActionEvent event, int emp) throws ClassNotFoundException, SQLException{
             System.out.println("switch to SwitchToAddClient");
-            this.anc = new AddNewClient(emp, emp_name);
+            this.anc = new AddNewClient(emp, emp_name, emp_role);
             ps = (Stage)((Node)event.getSource()).getScene().getWindow();
             Scene scene_listing = new Scene(anc.getRootPane());
             ps.setTitle("ADD NEW CLIENT");
@@ -169,7 +175,7 @@ public class ListClients {
 
     public void SwitchToAddTransaction(ActionEvent event, int accountId, String emp) throws ClassNotFoundException, SQLException{
             System.out.println("switch to SwitchToAddClient");
-            this.atra = new AddTransaction(accountId, emp);
+            this.atra = new AddTransaction(accountId, emp, emp_role);
             ps = (Stage)((Node)event.getSource()).getScene().getWindow();
             Scene scene_listing = new Scene(atra.getRootPane());
             ps.setTitle("ADD NEW TRANSACTION");
@@ -177,6 +183,35 @@ public class ListClients {
             resizeScene(300,300);
             System.out.println("Done");
     }
+
+    public void SwitchToViewReport(ActionEvent event, int accountId, String emp) throws ClassNotFoundException, SQLException{
+               String r= "manager";
+                if (r.equals(emp_role)){
+                System.out.println("switch to SwitchToAddClient");
+                this.vr = new ViewReport(accountId, emp, emp_role);
+                ps = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Scene scene_listing = new Scene(vr.getRootPane());
+                ps.setTitle("ADD NEW TRANSACTION");
+                ps.setScene(scene_listing);
+                ps.setFullScreen(true);
+                System.out.println("Done");
+                }else{
+
+                    Text txt = new Text("You are not authorized for this action!");
+                    txt.setFill(Color.RED);
+                    StackPane pane = new StackPane();
+                    pane.getChildren().add(txt);
+                    Scene alert = new Scene(pane,350,150);
+                    Stage s = new Stage();
+                    s.setTitle("ALERT!");
+                    s.setScene(alert);
+                   
+                    s.show();
+                    warning.setText("You are not authorized for this action");
+                    warning.setFill(Color.RED);
+                    System.out.println(emp_role);
+                }
+            }
 
     public void resizeScene(int w, int h) {
            this.ps.setWidth(w);
@@ -193,8 +228,13 @@ public class ListClients {
                     {
                         view_btn.setStyle("-fx-background-color:#90EE90;");
                         view_btn.setOnAction((ActionEvent event) -> {
-                            Client data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data);
+                            Client clt = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedClient: " + clt.getId());
+                            try{
+                                 SwitchToViewReport(event, clt.getAccount(), emp_name);
+                            }catch(Exception ex){             
+                                 System.out.println(ex);
+                            }
                         });
                     }
                     @Override

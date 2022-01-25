@@ -39,18 +39,26 @@ private Stage ps;
 public Login() throws ClassNotFoundException, SQLException{
   
     Button btn = new Button("Sign In");
+    btn.setStyle("-fx-background-color: \n" +
+    "     rgba(0,0,0,0.08),\n" +
+    "     linear-gradient(#5a61af, #51536d),\n" +
+    "     linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%);\n" +
+    "    -fx-background-insets: 0 0 -1 0,0,1;\n" +
+    "    -fx-background-radius: 5,5,4;\n" +
+    "    -fx-padding: 4 40 4 40;\n" +
+    "    -fx-text-fill: #242d35;\n" +
+    "    -fx-font-size: 18px;");
     TextField _email = new TextField();
+    _email.setPromptText("Enter your email");
     PasswordField _password = new PasswordField();
+    _password.setPromptText("Enter your password");
     Text warning = new Text("");
 
-        
         vb.setSpacing(8);
         vb.setPadding(new Insets(10,10,10,10));
         vb.getChildren().addAll(
                 warning,
-                new Label("Email"),
                 _email,
-                new Label("Password"),
                 _password,
                 btn );
 
@@ -61,13 +69,14 @@ public Login() throws ClassNotFoundException, SQLException{
             try{
                
                 System.out.println("connection login 0");
-                GetData _gd = new GetData("SELECT full_name, email, password FROM employees WHERE email ='"+_email.getText().trim()+"'AND password ='"+_password.getText().trim()+"';");
+                GetData _gd = new GetData("SELECT full_name, email, password, role "
+ + "FROM employees e, roles r WHERE r.id = e.role_id AND email ='"+_email.getText().trim()+"'AND password ='"+_password.getText().trim()+"';");
 
                 result = _gd.getResultSet();
 
                 if (result.next()){
                     System.out.println("connection login 1");
-                    SwitchToListUsers(event, result.getString("full_name"));
+                    SwitchToListUsers(event, result.getString("full_name"), result.getString("role"));
                   while(result.next()){ 
                     // EmpLogin lgn = new EmpLogin(result.getString("email"), result.getString("password"));
                    }
@@ -91,9 +100,9 @@ public Login() throws ClassNotFoundException, SQLException{
       return vb;
      }
 
-    public void SwitchToListUsers(ActionEvent event, String emp) throws ClassNotFoundException, SQLException{
+    public void SwitchToListUsers(ActionEvent event, String emp, String role) throws ClassNotFoundException, SQLException{
             System.out.println("switch to listUsers");
-            this.lu = new ListClients(emp);
+            this.lu = new ListClients(emp, role);
             ps = (Stage)((Node)event.getSource()).getScene().getWindow();
             Scene scene_listing = new Scene(lu.getRootPane());
             ps.setTitle("MY CLIENTS");
