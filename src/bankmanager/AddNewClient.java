@@ -35,7 +35,7 @@ import jdbc.SetData;
 public class AddNewClient {
 
 private int result = 0;
-private int result_2;
+
 private  VBox vb = new VBox();
 private Stage ps;
  public ListClients lu;

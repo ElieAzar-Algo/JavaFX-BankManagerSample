@@ -7,23 +7,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import jdbc.GetData;
-import models.EmpLogin;
+
 
 /**
  *
@@ -31,7 +31,7 @@ import models.EmpLogin;
  */
 public class Login{
     
-private  VBox vb = new VBox();
+private VBox vb = new VBox();
 private ResultSet result;
 private Stage ps;
  public ListClients lu;
@@ -70,8 +70,8 @@ public Login() throws ClassNotFoundException, SQLException{
                
                 System.out.println("connection login 0");
                 GetData _gd = new GetData("SELECT full_name, email, password, role "
- + "FROM employees e, roles r WHERE r.id = e.role_id AND email ='"+_email.getText().trim()+"'AND password ='"+_password.getText().trim()+"';");
-
+                + "FROM employees e, roles r WHERE r.id = e.role_id AND email ='"+_email.getText().trim()+"'AND password ='"+_password.getText().trim()+"';");
+                
                 result = _gd.getResultSet();
 
                 if (result.next()){

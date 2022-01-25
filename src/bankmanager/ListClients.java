@@ -8,26 +8,26 @@ import java.sql.ResultSetMetaData;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
+
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+
 import jdbc.GetData;
 import models.Client;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.ReadOnlyObjectWrapper;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.PopupControl;
+
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -42,14 +42,13 @@ import jdbc.SetData;
  */
 public class ListClients {
   private  VBox vb = new VBox();
-  private Pane root_2;
+
   private TableView table = new TableView();
   private ResultSet result;
   public AddNewClient anc;
   public AddTransaction atra;
   public ViewReport vr;
   private Stage ps;
-  private int account_id;
   private String emp_name;
   private String emp_role;
   private int deleteResult = 0;
@@ -187,14 +186,16 @@ public class ListClients {
     public void SwitchToViewReport(ActionEvent event, int accountId, String emp) throws ClassNotFoundException, SQLException{
                String r= "manager";
                 if (r.equals(emp_role)){
-                System.out.println("switch to SwitchToAddClient");
-                this.vr = new ViewReport(accountId, emp, emp_role);
-                ps = (Stage)((Node)event.getSource()).getScene().getWindow();
-                Scene scene_listing = new Scene(vr.getRootPane());
-                ps.setTitle("ADD NEW TRANSACTION");
-                ps.setScene(scene_listing);
-                ps.setFullScreen(true);
-                System.out.println("Done");
+
+                    System.out.println("switch to SwitchToAddClient");
+                    this.vr = new ViewReport(accountId, emp, emp_role);
+                    ps = (Stage)((Node)event.getSource()).getScene().getWindow();
+                    Scene scene_listing = new Scene(vr.getRootPane());
+                    ps.setTitle("ADD NEW TRANSACTION");
+                    ps.setScene(scene_listing);
+                    ps.setFullScreen(true);
+                    System.out.println("Done");
+
                 }else{
 
                     Text txt = new Text("You are not authorized for this action!");

@@ -4,7 +4,7 @@
  */
 package bankmanager;
 
-import java.awt.Color;
+
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,22 +17,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import jdbc.ConnectDatabase;
-import jdbc.GetData;
 
 
 /**
@@ -50,8 +43,6 @@ public class BankManager extends Application {
     @Override
     public void start(Stage primaryStage) throws SQLException, ClassNotFoundException {
      ps = primaryStage;
-
-        Button btn = new Button();
 
         btn_2.setStyle("-fx-background-color: \n" +
         "     rgba(0,0,0,0.08),\n" +
@@ -87,7 +78,7 @@ public class BankManager extends Application {
                        Login cu = new Login();
                        vb.getChildren().removeAll(txt, btn_2);
                        root.getChildren().add(cu.getView());
-                       resizeScene(300,500);
+                       resizeScene(500,800);
                        System.out.println("switchhhhh");
                    } catch (Exception ex) {
                            Logger.getLogger(BankManager.class.getName()).log(Level.SEVERE, null, ex);

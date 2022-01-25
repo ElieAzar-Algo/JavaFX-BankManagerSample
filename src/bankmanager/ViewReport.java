@@ -5,7 +5,6 @@
 package bankmanager;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +37,6 @@ public class ViewReport  {
     private String emp_name;
     private ResultSet result;
     private  VBox vb = new VBox();
-    private Pane root_2;
     private TableView table = new TableView();
     private Stage ps;
     private Text warning = new Text("");

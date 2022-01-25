@@ -5,12 +5,10 @@
 package jdbc;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javafx.scene.control.Button;
+
 
 /**
  *
@@ -36,5 +34,10 @@ public class GetData {
 
     public  ResultSet getResultSet(){
     return res;
+    }
+
+    public void closeConnection() throws SQLException{
+      connect.close();
+      System.out.println("connection closed");
     }
 }

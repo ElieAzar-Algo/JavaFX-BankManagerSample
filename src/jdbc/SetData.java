@@ -5,7 +5,6 @@
 package jdbc;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -28,10 +27,15 @@ public class SetData {
         System.out.println("connection set 2");
 
         res = statement.executeUpdate(insertQuery);
-    
+  
     }
 
     public  int getInsertResponse(){
     return res;
+    }
+
+    public void closeConnection() throws SQLException{
+       connect.close();
+       System.out.println("connection closed");
     }
 }
